@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    container_name: php-nginx-supervisor-alpine
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./:/app
+      - /app/vendor
+      - ./etc/docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./etc/docker/php/www.conf:/usr/local/etc/php-fpm.conf
+      - ./etc/docker/supervisor/supervisord.conf:/etc/supervisord.conf
+    ports:
+      - "8087:8080"
+    networks:
+      - php-nginx-supervisor-alpine-mongo-net
+
+  mongo:
+    image: "mongo:5.0"
+    container_name: mongodb-php-nginx-supervisor-alpine
+    command: mongod --auth
+    restart: unless-stopped
+    logging:
+      driver: none
+    ports:
+      - "${DB_PORT_INTERNAL_LOCALHOST_MONGO:-27017}:${DB_PORT_MONGO:-27017}"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DB_USERNAME_MONGO}
+      - MONGO_INITDB_ROOT_PASSWORD=${DB_PASSWORD_MONGO}
+    volumes:
+      - /home/$USER/mongodb-php-nginx-supervisor-alpine/mongo-data:/data/db
+      - /home/$USER/mongodb-php-nginx-supervisor-alpine/mongo-log:/var/log/mongodb/
+    networks:
+      - php-nginx-supervisor-alpine-mongo-net
+
+networks:
+  php-nginx-supervisor-alpine-mongo-net:

@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    container_name: nginx-fpm-supervisord-alpine
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./:/app
+      - /app/vendor
+      - ./etc/docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./etc/docker/php/www.conf:/usr/local/etc/php-fpm.conf
+      - ./etc/docker/supervisor/supervisord.conf:/etc/supervisord.conf
+    ports:
+      - "8085:8080"
