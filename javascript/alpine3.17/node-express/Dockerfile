@@ -7,8 +7,7 @@ ENV NODE_ENV $NODE_ENV
 
 COPY package*.json /usr/src/app/
 
-#RUN npm install
-RUN npm ci --only=production
+RUN npm install
 
 COPY . /usr/src/app
 
