@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  # Backend service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:3000
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - ./.env.example
+    restart: on-failure
+    networks:
+      - app-net
+    command: >
+      /bin/sh -c "
+        echo Connected!;
+        npm install;
+        npm start;
+      "
+networks:
+  app-net:
+    driver: bridge
+   
+#copiar del contenedor hacia la maquina local: docker cp -h
+# docker cp backend:./usr/src/app/package.json /${HOST_DIR}
+# docker cp backend:./usr/src/app/package-lock.json /${HOST_DIR}
+# Example shell: "docker cp backend:./usr/src/app/package*.json /${HOST_DIR}"
