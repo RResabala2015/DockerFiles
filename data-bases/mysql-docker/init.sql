@@ -1,0 +1,6 @@
+CREATE USER 'devuser'@'%' IDENTIFIED BY 'devpassword';
+GRANT ALL PRIVILEGES ON *.* TO 'devuser'@'%';
+FLUSH PRIVILEGES;
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
+FLUSH PRIVILEGES;
