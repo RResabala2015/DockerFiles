@@ -1,0 +1,20 @@
+services:
+  nicehash:
+    image: dockerhubnh/nicehash:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    environment:
+      - MINING_ADDRESS=${MINING_ADDRESS}
+      - MINING_WORKER_NAME=${MINING_WORKER_NAME}
+    env_file:
+      - .env
+    entrypoint: /usr/bin/nvidia-smi
+    stdin_open: true
+    tty: true
+    restart: "no"
